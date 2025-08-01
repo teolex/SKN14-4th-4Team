@@ -1,0 +1,79 @@
+{% extends '../layout/base_default.html' %}
+
+{% load static %}
+
+{% block title %}Gym-PT | Talk & Find!{% endblock title %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #f0f4f8;
+            color: #212529;
+        }
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .btn-custom {
+            background-color: white;
+            border: 2px solid #198754;
+            color: #198754;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #198754;
+            color: white;
+        }
+        .form-control, .form-floating {
+            background-color: #ffffff;
+        }
+        hr {
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="container py-5">
+        <!-- 상단 타이틀 카드 -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <p class="h2 text-success fw-bold">💪 Gym-PT와 대화하기</p>
+            </div>
+        </div>
+
+        <!-- 메인으로 돌아가기 버튼 -->
+        <div class="mb-3">
+            <a href="{% url 'mainapp:main' %}" class="btn btn-custom rounded-4">← 메인으로</a>
+        </div>
+
+        <hr/>
+
+        <!-- 이미지 업로드 -->
+        <p class="h4 fw-bold mb-2">📝 새로운 메시지</p>
+        <p class="text-start">음식 사진을 업로드해주세요 (최대 5개).</p>
+        <div class="mb-4">
+            <label for="formFile" class="form-label text-secondary">이미지 파일 선택</label>
+            <input class="form-control" type="file" id="formFile" multiple>
+        </div>
+
+        <!-- 추가 정보 -->
+        <p class="text-start">신체 정보와 음식에 대한 추가 정보를 입력해주세요.</p>
+        <div class="form-floating mb-4">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                      style="height: 100px"></textarea>
+            <label for="floatingTextarea2">
+                예: 나이 25세, 남성, 키 175cm, 몸무게 70kg, 평소 운동량 중간, 아침에 삶은 계란 2개 먹음...
+            </label>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <div class="d-grid gap-2 col-6 mx-auto mt-5">
+            <a href="javascript:alert('아무것도 안되지롱')" class="btn btn-custom btn-lg rounded-pill fw-bold">
+                🍽️ 오늘의 식사 입력하기
+            </a>
+        </div>
+    </div>
+{% endblock content %}
