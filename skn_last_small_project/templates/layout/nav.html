@@ -7,22 +7,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" aria-current="page" href="#">Home</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="#">Features</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="#">Pricing</a>#}
+{#                </li>#}
             </ul>
 
             <ul class="navbar-nav mb-2 mb-lg-1">
                 {% if user.is_authenticated %}
                     <li class="nav-item me-2">
-                        <a class="btn btn-outline-success" href="javascript:alert('My page 준비')">
-                            <img src="{% if user.member.picture %}{{ user.member.picture.url }}{% else %}/media/profile/default.jpg{% endif %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                        <a class="btn btn-outline-success p-0" href="javascript:alert('My page 준비')">
+                            <img src="{% if user.member.picture %}{{ user.member.picture.url }}{% else %}/media/profile/default.jpg{% endif %}" alt="Logo" width="37" height="37" class="rounded mx-auto d-block">
                         </a>
                     </li>
                     <li class="nav-item">
