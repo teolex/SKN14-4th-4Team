@@ -20,18 +20,17 @@
 
             <ul class="navbar-nav mb-2 mb-lg-1">
                 {% if user.is_authenticated %}
-{#                {% if False %}#}
                     <li class="nav-item me-2">
                         <a class="btn btn-outline-success" href="javascript:alert('My page 준비')">
                             <img src="{% if user.member.picture %}{{ user.member.picture.url }}{% else %}/media/profile/default.jpg{% endif %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary" href="{% url "mainapp:logout" %}">Log out</a>
+                        <a class="btn btn-primary" href="{% url "mainapp:logout" %}?next={{ request.path }}">Log out</a>
                     </li>
                 {% else %}
                     <li class="nav-item me-2">
-                        <a class="btn btn-outline-success" href="{% url "mainapp:login" %}">Sign in</a>
+                        <a class="btn btn-outline-success" href="{% url "mainapp:login" %}?next={{ request.path }}">Sign in</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-primary" href="{% url "mainapp:signup" %}">Sign up</a>

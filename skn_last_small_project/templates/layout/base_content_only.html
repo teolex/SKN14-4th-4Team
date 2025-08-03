@@ -1,6 +1,7 @@
+<!doctype html>
+
 {% load static %}
 
-<!doctype html>
 <html lang="ko">
     <head>
         <meta charset="utf-8">
@@ -20,6 +21,8 @@
             {# Content 블럭 ##################################################}
             {% block content %}{% endblock %}
         </main>
+
+        {% include "./form_error_toast.html" %}
 
         {# Bootstrap JS, Popper JS #}
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

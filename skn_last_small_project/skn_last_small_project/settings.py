@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 로그인 성공한 후의 리다이렉트 URL ( 기본값 = /accounts/profile )
 # LOGIN_REDIRECT_URL = '/qna/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/main/'
 
 
 # 파일업로드 관련 설정

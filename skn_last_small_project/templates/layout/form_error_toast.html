@@ -1,0 +1,40 @@
+{% if form.errors %}
+    <div>
+        <!-- Position it: -->
+        <!-- - `.toast-container` for spacing between toasts -->
+        <!-- - `top-0` & `end-0` to position the toasts in the upper right corner -->
+        <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+        <div class="toast-container top-0 end-0 p-3">
+            {% for error in form.non_field_errors %}
+                <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header text-bg-danger">
+{#                        <img src="..." class="rounded me-2" alt="...">#}
+                        <strong class="me-auto">Please check.</strong>
+                        {#                    <small class="text-body-secondary">just now</small>#}
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ error }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+{#                            <img src="..." class="rounded me-2" alt="...">#}
+                            <strong class="me-auto">Please check '{{ field.label }}'.</strong>
+                            {#                    <small class="text-body-secondary">just now</small>#}
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            {{ form.errors }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}

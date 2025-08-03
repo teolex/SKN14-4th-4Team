@@ -61,13 +61,13 @@
               👤
           </div>
           <h4 class="mb-3">LOGIN</h4>
-          <form method="post">
+          <form method="post" name="loginForm">
               {% csrf_token %}
               <div class="mb-2 px-3">
-                  <input type="text" class="form-control" placeholder="Username" name="username">
+                  <input type="text" class="form-control" placeholder="Username" name="username" value="{{ form.username.value }}">
               </div>
               <div class="mb-3 px-3">
-                  <input type="password" class="form-control" placeholder="Password" name="password">
+                  <input type="password" class="form-control" placeholder="Password" name="password" value="{{ form.password.value }}">
               </div>
               <div class="d-grid gap-2 px-3">
                   <button type="submit" class="btn btn-login">Sign In</button>
@@ -78,6 +78,6 @@
 
 {% block script %}
     <script>
-
+        document.loginForm.username.focus()
     </script>
 {% endblock script %}

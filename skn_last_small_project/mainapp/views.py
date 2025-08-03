@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
 from django.contrib import auth
-from .models import MemberCreateForm, Member
+from django.shortcuts import render, redirect
+
+from .models import MemberCreateForm
 
 
 # Create your views here.
@@ -39,4 +40,4 @@ def signup(request):
 
 def logout(request):
     auth.logout(request)
-    return redirect("mainapp:main")
+    return redirect( request.GET.get("next","mainapp:main"))
