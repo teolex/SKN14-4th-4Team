@@ -64,10 +64,10 @@
           <form method="post" name="loginForm">
               {% csrf_token %}
               <div class="mb-2 px-3">
-                  <input type="text" class="form-control" placeholder="Username" name="username" value="{{ form.username.value }}">
+                  <input type="text" class="form-control" placeholder="Username" name="username" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
               </div>
               <div class="mb-3 px-3">
-                  <input type="password" class="form-control" placeholder="Password" name="password" value="{{ form.password.value }}">
+                  <input type="password" class="form-control" placeholder="Password" name="password" value="{% if form.password.value %}{{ form.password.value }}{% endif %}">
               </div>
               <div class="d-grid gap-2 px-3">
                   <button type="submit" class="btn btn-login">Sign In</button>

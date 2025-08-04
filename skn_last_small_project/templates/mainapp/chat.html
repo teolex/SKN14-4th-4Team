@@ -4,6 +4,10 @@
 
 {% block title %}Gym-PT | Talk & Find!{% endblock title %}
 
+{% block upper_script %}
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock upper_script %}
+
 {% block style %}
     <style>
         body {
@@ -138,7 +142,8 @@
             return $template;
         }
         const appendChat = function(json) {
-            let msgTmpl = chatEle(aiChatForm, json.answer);
+            let html = marked.parse(json.answer);
+            let msgTmpl = chatEle(aiChatForm, html);
             $chatLog.appendChild(msgTmpl.content.firstChild);
         }
     </script>
