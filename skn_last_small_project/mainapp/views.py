@@ -1,23 +1,13 @@
-from django.conf import settings
 from django.contrib import auth
-from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
-from langchain_openai import OpenAIEmbeddings
-from langchain_pinecone import PineconeVectorStore
-from pinecone import Pinecone
 
 from .forms.chat_form import FoodUploadForm
 from .include.inferer import *
 from .include.util import *
 from .models import MemberCreateForm
 
-
-# Create your views here.
-
-# pc           = Pinecone(pinecone_api_key=settings.PINECONE_PJ_KEY)
-# index        = pc.Index(settings.INDEX_NAME)
-# embeddings   = OpenAIEmbeddings(model=settings.EMBED_MODEL)
-# vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
 def intro(request):
     return render(request, "mainapp/intro.html")
@@ -29,62 +19,50 @@ def chat(request):
     if request.method == "POST":
         form = FoodUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            images = [Inferer.to_pil_image(img) for img in form.cleaned_data["images"]]
-            names  = [f.name for f in form.cleaned_data["images"]]
+            images = [Image.open(img).convert('RGB') for img in form.cleaned_data["images"]]
             text   = form.cleaned_data["user_text"]
 
-            pc           = Pinecone(api_key=settings.PINECONE_PJ_KEY)
-            index        = pc.Index(settings.INDEX_NAME)
-            embeddings   = OpenAIEmbeddings(model=settings.EMBED_MODEL)
-            vector_store = PineconeVectorStore(index=index, embedding=embeddings)
+            context_info = {
+                "image_info" : [],
+                "user_text"  : text,
+            }
 
-            menu_infos  = []
+            if request.user.is_authenticated:
+                user = request.user.member
+                context_info["user_info"] = f"키 {user.height}cm, 몸무게 {user.weight} kg, 나이 {user.age}"
+                print("logged in user", context_info["user_info"])
 
-            if images and not text:
+            if images:
                 inferer = OpenAIInferer("gpt-4o-mini")
-                results = inferer(images, names)
-                for filename, pred_str in results.items():
-                    menu_name, ingredients = parse_prediction(pred_str)
-                    rag_context, calorie = get_menu_context_with_threshold(vector_store, menu_name)
-                    menu_infos.append({
-                        "filename": filename,
-                        "menu_name": menu_name,
-                        "calorie": calorie,
-                        "ingredients": ingredients,
-                        "rag_context": rag_context
-                    })
-            elif not images and text:
-                menu_infos.append({
-                    "filename": "-",
-                    "menu_name": text,
-                    "calorie": "",
-                    "ingredients": "",
-                    "rag_context": ""
-                })
+                results = inferer(images)
+                for _, food_dict in results.items():
+                    menu_name   = food_dict["name"]
+                    # ingredients = food_dict["ingredients"]
+                    rag_context, calorie = get_menu_context_with_threshold(menu_name)
+                    _image_info = {
+                        "menu_name"   : menu_name,
+                        "calorie"     : calorie,
+                        "rag_context" : rag_context,
+                    }
+                    context_info["image_info"].append(_image_info)
 
-            chat_history = request.session.get("history", [])
-            print(f"last 2 chat_history = {chat_history[-2:]}")
+            chat_history   = request.session.get("history", [])
+            chat_history   = [tuple(item) for item in chat_history]
+            final_response = analyze_meal_with_llm(context_info, chat_history)
 
-            # 최종 분석 (이미지, 텍스트 모두 menu_infos에 들어감)
-            final_response = analyze_meal_with_llm(
-                menu_infos=menu_infos,
-                user_info=text,
-                chat_history=chat_history
-            )
-            chat_history.append(("user", text, images))
-            chat_history.append(("assistant", final_response, None))
             request.session["history"] = chat_history
 
-            return JsonResponse({
-                "user_text" : f'{text}',
-                "answer"    : f"{final_response}"
-            })
+            result_dict = {
+                "user_text": f'{str(text)}',
+                "answer"   : f"{str(final_response)}"
+            }
+
+            return JsonResponse(result_dict)
         else:
             print("\n\nERROR\n", form.errors)
-    else:
-        form = FoodUploadForm()
 
-    return render(request, "mainapp/chat.html", {"form":form})
+
+    return render(request, "mainapp/chat.html", {"form":FoodUploadForm()})
 
 def signup(request):
     if request.method == "POST":
@@ -108,5 +86,13 @@ def signup(request):
     return render(request, "mainapp/signup.html", {"form": form})
 
 def logout(request):
-    auth.logout(request)
+    try:
+        auth.logout(request)
+    except Exception as e:
+        print(e)
+
     return redirect( request.GET.get("next","mainapp:main"))
+
+@login_required(login_url="/login")
+def mypage(request):
+    pass

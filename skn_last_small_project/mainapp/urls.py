@@ -16,6 +16,8 @@ urlpatterns = [
     path('login/'   , auth_views.LoginView.as_view(template_name="mainapp/login.html"), name="login"),
     path('signup/'  , views.signup, name="signup"),
     path('logout/'  , views.logout, name="logout"),
+
+    path('mypage/'  , views.mypage, name="mypage"),
 ]
 
 # 업로드 파일 경로설정

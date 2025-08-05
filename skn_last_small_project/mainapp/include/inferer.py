@@ -2,6 +2,7 @@ import base64
 import os
 import threading
 from io import BytesIO
+import ast
 
 from PIL import Image
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -37,6 +38,7 @@ class OpenAIInferer(Inferer):
 - 음식명과 재료목록은 반드시 한글이어야 합니다.
 - 답변은 [("음식명", "재료목록")] 과 같이 배열로 감싼 형태여야 합니다.
 - 이미지에 음식의 개수가 여러가지라면, 최대 5개의 음식을 배열로 감싸서 반환합니다.
+- 만약 음식이미지가 아니라면, 답변 예시를 무시하고 반드시 "not_food" 라고만 답해야 합니다.
 
 < 답변 예시 >
 [("짜장면", "춘장, 돼지고기, 양파, 면, 카라멜")]
@@ -59,16 +61,33 @@ class OpenAIInferer(Inferer):
         prompt = ChatPromptTemplate.from_messages([self.system_msg, user_msg])
         chain = prompt | self.llm | parser
 
-        storage[filename] = chain.invoke({})
+        try:
+            result = chain.invoke({})           # '[ ("짜장면", "춘장, 돼지고기, 양파, 면, 카라멜") ]'
+            result = ast.literal_eval(result)   #  [ ("짜장면", "춘장, 돼지고기, 양파, 면, 카라멜") ]
+            result = {"name" : result[0][0], "ingredients" : result[0][1]}
 
-    def __call__(self, images:list[Image], filenames:list[str], *, parser=StrOutputParser()):
-        tmp_zip = zip(images, filenames)
+            storage[filename] = result
+        except:
+            print("It's not food image.")
+
+    def __call__(self, images:list[Image], *, parser=StrOutputParser()):
         storage = {}
-        threads = [threading.Thread(target=self.infer, args=(img, nm, storage, parser)) for img, nm in tmp_zip]
+        threads = [threading.Thread(target=self.infer, args=(img, f"food_{i+1}", storage, parser)) for i,img in enumerate(images)]
 
         for thread in threads:  thread.start()
         for thread in threads:  thread.join()
 
-        # print("음식 이미지 분류 결과", "-"*40, storage, sep="\n", end="\n")
-
         return storage
+
+# if __name__ == "__main__":
+#     import os
+#     from dotenv import load_dotenv
+#
+#     load_dotenv("../../.env")
+#
+#     inferer = OpenAIInferer()
+#     img1 = Image.open("food1.jpg")
+#     img2 = Image.open("food2.jpg")
+#     _list = [img1, img2]
+#     result = inferer(_list)
+#     print(result)

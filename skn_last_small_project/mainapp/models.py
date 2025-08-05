@@ -13,6 +13,13 @@ class Member(models.Model):
     weight     = models.FloatField(null=False, blank=False, default=50)
     picture    = models.ImageField(null=False, blank=False, upload_to='profile/')
 
+    @property
+    def age(self):
+        today = date.today()
+        birth = self.birthday
+        return today.year - birth.year - ( (today.month, today.day) < (birth.month, birth.day) )
+
+
 class MemberCreateForm(UserCreationForm):
     birthday   = forms.DateField (required=True, label="생일")
     height     = forms.FloatField(required=True, label="신장(cm)")
