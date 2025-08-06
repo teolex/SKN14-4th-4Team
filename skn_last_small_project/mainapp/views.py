@@ -1,5 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
@@ -91,8 +92,14 @@ def logout(request):
     except Exception as e:
         print(e)
 
-    return redirect( request.GET.get("next","mainapp:main"))
+    return redirect("mainapp:intro")
 
 @login_required(login_url="/login")
 def mypage(request):
-    pass
+    info = request.user.member.to_dict()
+    return render(request, "mainapp/mypage.html", info)
+
+@login_required(login_url="/login")
+def deregister(request):
+    User.objects.filter(id=request.user.id).delete()
+    return redirect("mainapp:intro")
