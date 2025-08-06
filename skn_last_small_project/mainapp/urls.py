@@ -17,7 +17,8 @@ urlpatterns = [
     path('signup/'  , views.signup, name="signup"),
     path('logout/'  , views.logout, name="logout"),
 
-    path('mypage/'  , views.mypage, name="mypage"),
+    path('mypage/'    , views.mypage, name="mypage"),
+    path('deregister/', views.deregister, name="deregister"),
 ]
 
 # 업로드 파일 경로설정
