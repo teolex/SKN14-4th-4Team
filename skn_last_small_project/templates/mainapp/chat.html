@@ -1,0 +1,254 @@
+{% extends '../layout/base_default.html' %}
+
+{% load static %}
+
+{% block title %}Gym-PT | Talk & Find!{% endblock title %}
+
+{% block upper_script %}
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock upper_script %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #f0f4f8;
+            color: #212529;
+        }
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .btn-custom {
+            background-color: white;
+            border: 2px solid #198754;
+            color: #198754;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #198754;
+            color: white;
+        }
+        .form-control, .form-floating {
+            background-color: #ffffff;
+        }
+        hr {
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* chatting */
+        div.chatMsg { max-width:75%; }
+        div#chatLogBox { max-height:500px; overflow-y:auto; }
+
+        form[name=askForm] {
+            position:relative;
+        }
+
+        #preview img {
+            max-width:150px;
+            max-height:150px;
+            vertical-align:top;
+        }
+
+        .chatMsg table {
+            border-collapse: collapse;
+        }
+
+        .chatMsg table th {
+            padding: 10px;
+            border-top: 1px solid gray;
+            border-bottom: 3px solid gray;
+        }
+
+        .chatMsg table td {
+            padding: 5px 10px;
+            border-bottom: 1px solid lightgray;
+        }
+
+        .chatMsg h4 {
+            border: 1px solid lightgray;
+            border-radius: 10px;
+            padding: 5px 0 5px 10px;
+            background-color: blanchedalmond
+        }
+
+        .chatMsg .img-thumbnail {
+            max-width:100px;
+            max-height:100px;
+            vertical-align:top;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="container py-5">
+        <!-- 상단 타이틀 카드 -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <p class="h2 text-success fw-bold">💪 Gym-PT와 대화하기</p>
+            </div>
+        </div>
+
+        <!-- 메인으로 돌아가기 버튼 -->
+        <div class="mb-3">
+            <a href="{% url 'mainapp:main' %}" class="btn btn-custom rounded-4">← 메인으로</a>
+        </div>
+
+        <hr/>
+
+        <div class="container px-0 py-4">
+            <div class="card shadow-sm" id="chagLogBox">
+                <div class="card-body d-flex flex-column gap-3" id="chagLog"></div>
+            </div>
+        </div>
+
+
+        <!-- 이미지 업로드 -->
+        <form method="post" enctype="multipart/form-data" name="askForm">
+            {% csrf_token %}
+            <p class="h4 fw-bold mb-2">📝 새로운 메시지</p>
+            <p class="text-start">음식 사진을 업로드해주세요 (최대 5개).</p>
+            <div id="preview"></div>
+            <div class="mb-4">
+                <label for="formFile" class="form-label text-secondary">이미지 파일 선택</label>
+                <input class="form-control" type="file" id="formFile" multiple accept="jpg,jpeg,png" name="images">
+            </div>
+
+            <!-- 추가 정보 -->
+            <p class="text-start">신체 정보와 음식에 대한 추가 정보를 입력해주세요.</p>
+            <div class="form-floating mb-4">
+            <textarea class="form-control" name="user_text" placeholder="Leave a comment here" id="floatingTextarea2"
+                      style="height: 100px;min-height: 100px;max-height: 100px;"></textarea>
+                <label for="floatingTextarea2">
+                    예: 나이 25세, 남성, 키 175cm, 몸무게 70kg, 평소 운동량 중간, 아침에 삶은 계란 2개 먹음...
+                </label>
+            </div>
+
+            {% include "../layout/loading.html" %}
+
+            <!-- 제출 버튼 -->
+            <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                <a href="javascript:;" id="askBtn" type="button" class="btn btn-custom btn-lg rounded-pill fw-bold">
+                    🍽️ 오늘의 식사 입력하기
+                </a>
+{#                <input type="submit" value="🍽️ 오늘의 식사 입력하기" class="btn btn-custom btn-lg rounded-pill fw-bold">#}
+            </div>
+        </form>
+
+    </div>
+
+    <template id="warnPop">
+        <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-bg-danger">
+                <strong class="me-auto">{TITLE}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">{BODY}</div>
+        </div>
+    </template>
+    <div>
+        <div class="toast-container top-0 end-0 p-3" id="warnBox">
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        const $warnBox = document.getElementById("warnBox");
+        const $tmpl    = document.getElementById("warnPop").content.firstChild.cloneNode(true);
+        const addWarn  = function(title, body) {
+            let $warn = $tmpl.cloneNode(true);
+            $warn.querySelector(".me-auto").innerText = title;
+            $warn.querySelector(".toast-body").innerText = body;
+
+            $warnBox.prepend($warn);
+        }
+    </script>
+    <script>
+        const $chatLog      = document.getElementById("chagLog");
+        const aiChatForm    = '<div class="d-flex">'+
+                              '    <div class="bg-light text-dark p-3 rounded-4 chatMsg">{msg}</div>'+
+                              '</div>';
+        const userChatForm  = '<div class="d-flex justify-content-end">'+
+                              '    <div class="bg-success text-white p-3 rounded-4 chatMsg">{msg}</div>'+
+                              '</div>';
+        const chatEle = function(format, msg) {
+            const $template = document.createElement("template");
+            $template.innerHTML = format.replace("{msg}", msg);
+            return $template.content.firstChild;
+        }
+        const appendChat = function(json) {
+            try {
+                let html = marked.parse(json.answer);
+                let msgTmpl = chatEle(aiChatForm, html);
+                $chatLog.appendChild(msgTmpl);
+            } catch(err) {
+                console.error("appendChat got caught an error.", err)
+            } finally {
+                stopLoading();
+            }
+        }
+    </script>
+    <script>
+        const f = document.askForm;
+        document.getElementById("formFile").addEventListener("change", e1 => {
+            const $preview = document.getElementById("preview");
+            $preview.innerHTML = "";
+            for( let i in f.images.files ) {
+                let file = f.images.files[i];
+                let $img = document.createElement("img");
+                $img.classList.add("img-thumbnail");
+
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    $img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                $preview.appendChild($img);
+            }
+        });
+        const ask = function() {
+            let formData = new FormData(f);
+            let params = {
+                method:"POST",
+                cache:"no-cache",
+                headers:{
+                    "X-CSRFToken" :f.csrfmiddlewaretoken.value
+                },
+                body: formData
+            };
+
+            let fileCnt = f.images.files.length;
+            let textLen = f.user_text.value.length;
+            if( fileCnt === 0 && textLen === 0 ) {
+                addWarn("필수 입력값 확인", "파일이나 텍스트 둘 중 하나는 입력해야 합니다.");
+                throw new Error("No image and no text");
+            }
+
+            let $msgTmpl = chatEle(userChatForm, f.user_text.value);
+            if( fileCnt > 0 ) {
+                const $preview = document.getElementById("preview");
+                const $chatMsg = $msgTmpl.querySelector(".chatMsg");
+                const $imgBox  = document.createElement("div");
+                $chatMsg.prepend($imgBox);
+                [...$preview.childNodes].forEach((e,i) => $imgBox.appendChild(e));
+            }
+            $chatLog.appendChild($msgTmpl);
+
+            fetch("{% url "mainapp:chat" %}", params)
+                .then(resp => resp.json())
+                .then(appendChat);
+
+            f.reset();
+        }
+        document.getElementById("askBtn").addEventListener("click", e => {
+            startLoading();
+            try { ask(); }
+            catch(err) {
+                console.error("ask got caught an error.", err);
+                stopLoading();
+            }
+        });
+    </script>
+{% endblock script %}
