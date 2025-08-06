@@ -19,6 +19,17 @@ class Member(models.Model):
         birth = self.birthday
         return today.year - birth.year - ( (today.month, today.day) < (birth.month, birth.day) )
 
+    def to_dict(self):
+        return {
+            "id"        : self.user.username,
+            "email"     : self.user.email,
+            "birthday"  : self.birthday,
+            "height"    : self.height,
+            "weight"    : self.weight,
+            "picture"   : self.picture,
+            "name"      : self.user.last_name+self.user.first_name,
+        }
+
 
 class MemberCreateForm(UserCreationForm):
     birthday   = forms.DateField (required=True, label="생일")
