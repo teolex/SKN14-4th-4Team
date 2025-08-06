@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymPT | Main Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+</head>
+<body>
+    
+  <div class="container text-center">
+    <h3><b>💪GYM-PT</b></h3>
+    <br>
+    식단과 운동을 관리해주는 당신만의 트레이너<br><br><br>
+
+
+  <div class="row justify-content-around">
+    <div class="col">
+      🍎 오늘 섭취한 음식의 사진들과 약간의 신체정보를 넣어주시면
+      <br>
+      <br>
+      ✅ 이 음식은 몇 칼로리인지<br>
+      ✅ 이 칼로리를 소모하려면 어떤 운동을 얼만큼 해야하는지<br>
+      ✅ 남은 끼니는 어떤 음식을 섭취하면 좋을지
+      <br><br>
+      <b>전문적으로 알려드릴게요!</b>
+
+    </div>
+  </div>
+
+  
+  <div class="row justify-content-around m-5">
+    <div class="col-4">
+      <h5><b>이미지 분석</b></h5>
+      <br>
+      음식 사진을 올리면<br>
+      AI가 메뉴와 칼로리를 분석해드려요
+    </div>
+    <div class="col-4">
+      <h5><b>운동 추천</b></h5>
+      섭취한 칼로리에 맞는<br>
+      맞춤형 운동 계획을 제공해드려요
+    </div>
+    <div class="col-4">
+      <h5><b>식단 관리</b></h5>
+      남은 칼로리에 맞는<br>
+      건강한 식단을 추천해드려요
+    </div>
+  </div>
+
+
+  <div class="row justify-content-between">
+
+  </div>
+
+
+  <div class="row justify-content-evenly">
+    <a class="btn btn-primary w-25" href="{% url 'main:chatbot' %}">🍚 오늘의 식사 입력하기</a>
+    {% comment %} <button type="submit" class="btn btn-primary w-25" >🍚 오늘의 식사 입력하기</button> {% endcomment %}
+  </div>
+
+  
+</div>
+</body>
+</html>
