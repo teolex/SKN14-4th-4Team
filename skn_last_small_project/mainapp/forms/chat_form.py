@@ -7,23 +7,12 @@ class MultipleFileField(forms.FileField):
         super().__init__(*args, **kwargs)
 
     def clean(self, data, initial=None):
-        single_file_clean = super().clean
-        if isinstance(data, (list, tuple)):
-            result = [single_file_clean(d, initial) for d in data]
-        else:
-            result = single_file_clean(data, initial)
+        if isinstance(data, (list, tuple)):  result = [super().clean(d, initial) for d in data]
+        else:                                result =  super().clean(data, initial)
 
         return result
 
 class FoodUploadForm(forms.Form):
-    # images = forms.FileField(
-    #     widget=forms.ClearableFileInput(attrs={
-    #         "class": "form-control",
-    #         "accept": "jpg,jpeg,png",
-    #         "allow_multiple_selected": True
-    #     }),
-    #     required=False
-    # )
     images = MultipleFileField(required=False)
     user_text = forms.CharField(
         widget=forms.Textarea(attrs={
@@ -50,6 +39,8 @@ class FoodUploadForm(forms.Form):
             if ext not in ALLOWED_EXT:  wrong_types.append(f.name)
             if f.size > MAX_FILE_SIZE:  wrong_sizes.append(f.name)
 
+        # if wrong_types:  raise ValidationError(f"{", ".join(ALLOWED_EXT)} 파일만 업로드할 수 있습니다.<br/>{"<br/>".join(wrong_types)}")
+        # if wrong_sizes:  raise ValidationError(f"{_5MB}MB 를 넘는 파일은 업로드할 수 없습니다.<br/>{"<br/>".join(wrong_sizes)}")
         if wrong_types:  raise ValidationError(f"{", ".join(ALLOWED_EXT)} 파일만 업로드할 수 있습니다.<br/>{"<br/>".join(wrong_types)}")
         if wrong_sizes:  raise ValidationError(f"{_5MB}MB 를 넘는 파일은 업로드할 수 없습니다.<br/>{"<br/>".join(wrong_sizes)}")
 
@@ -62,6 +53,7 @@ class FoodUploadForm(forms.Form):
         text   = cleaned_data.get("user_text")
 
         if not images and not text:
-            raise ValidationError("이미지나 텍스트 중 하나는 입력해주세요.")
+            # raise ValidationError("이미지나 텍스트 중 하나는 입력해주세요.")
+            text = "이번 질문에 한해서, 다른 내용들은 반드시! 모두 무시하고, 이미지나 질문 중 한 가지는 꼭 입력해야 한다는 내용의 답변을 반환해주세요."
 
         return cleaned_data
