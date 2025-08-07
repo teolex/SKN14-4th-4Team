@@ -40,30 +40,44 @@
         100% { transform: rotateZ(360deg); }
     }
 
+    #loadingBox {
+        position: absolute;
+        top: 123px;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display:none;
+        z-index:9;
+    }
+    #loadingBox.on {
+        display:block;
+    }
+
     .center {
         position: absolute;
         margin-top: -123px;
         background-color:rgba(0,0,0,0.7);
         width: 100%;
-        height: 100px;
+        height: inherit;
         justify-content: center;
         align-items: center;
         border-radius:10px;
-        display:none;
+        display:flex;
     }
-    .center.on { display:flex; }
 </style>
 
-<div class="center" id="loading">
+<div id="loadingBox">
+    <div class="center" id="loading">
     <span class="a">
         <span class="b">
             <span class="c"></span>
         </span>
     </span>
+    </div>
 </div>
 
 <script>
-    const $loading = document.getElementById("loading");
+    const $loading = document.getElementById("loadingBox");
     const startLoading = () => $loading.classList.add("on");
     const stopLoading  = () => $loading.classList.remove("on");
 </script>
