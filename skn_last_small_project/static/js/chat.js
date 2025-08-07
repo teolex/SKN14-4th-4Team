@@ -79,9 +79,11 @@ const ChatBox = function(boxId) {
     function addNewChat(type, obj) {
         const $chatBlock = getChatBlock(type, obj);
         $chatLog.appendChild($chatBlock);
+        return $chatBlock;
     }
     function add(obj) {
         $chatLog.appendChild(obj);
+        return obj;
     }
 
     return {
@@ -137,7 +139,7 @@ const setFilePreview = function($input, $preview) {
             $chatMsg.prepend($imgBox);
             [...$preview.childNodes].forEach((e,i) => $imgBox.appendChild(e));
         }
-        chatBox.add($msgTmpl);
+        let $myLastQuestion = chatBox.add($msgTmpl);
 
 
         let params = {
@@ -159,6 +161,8 @@ const setFilePreview = function($input, $preview) {
                 } finally {
                     stopLoading();
                     f.reset();
+                    if( $myLastQuestion )
+                        $myLastQuestion.scrollIntoView({ behavior: 'smooth' });
                 }
             });
     }
@@ -173,8 +177,12 @@ const setFilePreview = function($input, $preview) {
             stopLoading();
         }
     });
-    document.getElementById("floatingTextarea2").addEventListener("keydown", e => {
+
+    const $textarea = document.getElementById("floatingTextarea2");
+    $textarea.focus();
+    $textarea.addEventListener("keydown", e => {
         let isEnter = e.key === "Enter";
         e.ctrlKey && isEnter && $askBtn.click();
     })
+
 })();
