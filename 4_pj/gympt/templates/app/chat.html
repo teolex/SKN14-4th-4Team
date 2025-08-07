@@ -1,0 +1,100 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block content %}
+
+<h2 class="text-center mb-4">💬 GYM-PT 챗봇</h2>
+
+{# ───────── 상단 액션 버튼 ───────── #}
+<div class="d-flex justify-content-between mb-2">
+  {# POST-REDIRECT-GET 패턴용 새로고침 링크 #}
+  <a href="{% url 'chat' %}?reset=1" class="btn btn-outline-secondary">새 메시지</a>
+</div>
+
+
+{#----------------- 대화 이력 -----------------#}
+{% if chat_history %}
+  <div class="mb-4">
+    {% for role, content, images in chat_history %}
+      <div class="alert {% if role == 'user' %}alert-primary text-dark{% else %}alert-secondary{% endif %}">
+        <strong>
+          {% if role == 'user' %}👤 사용자{% else %}🤖 GYM-PT{% endif %}
+        </strong><br>
+        {{ content|linebreaksbr }}
+
+        {# 첨부 이미지가 있을 경우 썸네일 표시 #}
+        {% if images %}
+          <div class="mt-2 d-flex flex-wrap gap-2">
+            {% for img in images %}
+              <img src="{{ img.url }}"
+                   class="img-thumbnail"
+                   style="max-width:120px; max-height:120px;"
+                   alt="첨부 이미지">
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{#----------------- 입력 폼 -----------------#}
+<form method="post"
+      enctype="multipart/form-data"
+      action="{% url 'chat' %}"
+      class="card p-4 mb-4">
+
+  {% csrf_token %}
+
+  {# ─── 메시지 ─── #}
+  <div class="mb-3">
+    <label for="id_message" class="form-label">메시지:</label>
+    <textarea id="id_message"
+              name="message"
+              rows="2"
+              class="form-control"
+              placeholder="예: 아침에 계란 두 개 먹고…"></textarea>
+  </div>
+
+  {# ─── 이미지 ─── #}
+  <div class="mb-3">
+    <label for="{{ form.images.id_for_label }}" class="form-label">음식 이미지 (최대 5장):</label>
+    <input
+      type="file"
+      id="id_images"
+      name="images"
+      accept=".jpg,.jpeg,.png"
+      multiple
+      class="form-control">
+    <div class="form-text">jpg / png 파일을 최대 5장까지 업로드할 수 있습니다.</div>
+
+    {% if form.images.errors %}
+      <div class="text-danger small mt-1">{{ form.images.errors.0 }}</div>
+    {% endif %}
+    
+    <div id="preview-box" class="d-flex flex-wrap gap-2 mt-2"></div>
+  </div>
+
+  <button type="submit"
+        class="btn btn-success position-relative w-100"
+        id="analyzeBtn">
+    📤 분석 요청하기
+    <div id="spinner"
+        class="d-none position-absolute top-50 start-50 translate-middle">
+      <img src="{% static 'spinner.gif' %}" alt="로딩중">
+    </div>
+</button>
+
+</form>
+
+
+{#----------------- 단일 응답 카드-----------------#}
+{% if response %}
+  <div class="card">
+    <div class="card-body">
+      <pre class="mb-0">{{ response }}</pre>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
+
