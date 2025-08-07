@@ -18,6 +18,7 @@ def main(request):
 
 def chat(request):
     if request.method == "POST":
+        print("POST called.")
         form = FoodUploadForm(request.POST, request.FILES)
         if form.is_valid():
             images = [Image.open(img).convert('RGB') for img in form.cleaned_data["images"]]
