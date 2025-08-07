@@ -37,7 +37,8 @@ SECRET_KEY = 'django-insecure-hm=v0t0_x_h=#&^w@1u-xzm!u%mf%4^kstsbp&rok!3eod($69
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOST = os.getenv("ALLOWED_HOST", "127.0.0.1")
+ALLOWED_HOSTS = [ALLOWED_HOST, ]
 
 
 # Application definition
@@ -145,6 +146,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [ BASE_DIR / "static" ]
 
+# 배포 시에는 collectstatic 으로 모을 위치
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -158,3 +162,8 @@ LOGIN_REDIRECT_URL = '/main/'
 # 파일업로드 관련 설정
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+print("== JIHUN ==", f"{BASE_DIR=}")
+print("== JIHUN ==", f"{STATICFILES_DIRS=}")
+print("== JIHUN ==", f"{STATIC_ROOT=}")
