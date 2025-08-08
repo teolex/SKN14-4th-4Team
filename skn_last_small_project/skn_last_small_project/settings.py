@@ -167,3 +167,13 @@ MEDIA_ROOT = BASE_DIR / "media"
 print("== JIHUN ==", f"{BASE_DIR=}")
 print("== JIHUN ==", f"{STATICFILES_DIRS=}")
 print("== JIHUN ==", f"{STATIC_ROOT=}")
+
+
+# docker build --build-arg OPENAI_API_KEY=dummy --build-arg PINECONE_PJ_KEY=dummy -t jihunsong88/skn-4th-team4 .
+# docker push jihunsong88/skn-4th-team4
+# docker network create skn14-network
+# docker volume create skn14-team4-volume
+# docker volume create media-volume
+# docker run -d --name skn14-team4 -v skn14-team4-volume:/app/static -v media-volume:/app/media -e PINECONE_PJ_KEY=실제키값 -e OPENAI_API_KEY=실제키값 -e ALLOWED_HOST=52.79.81.31 --network skn14-network  jihunsong88/skn-4th-team4
+# docker run -d --name nginx -p 80:80 -v skn14-team4-volume:/staticfiles -v media-volume:/web_media -v $(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf --network skn14-network nginx
+
