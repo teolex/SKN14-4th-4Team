@@ -149,7 +149,7 @@ skn_last_small_project/
 ---
 
 ## 5. 전체 워크 플로우
-![alt text](<SKN14_4th_Team4 infra.svg>)
+![alt text](</images/SKN14_4th_Team4 infra.svg>)
 
 ## 중요 코드 설명
 
