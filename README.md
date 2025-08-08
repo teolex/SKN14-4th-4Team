@@ -280,7 +280,7 @@ request 를 받을 때마다 langchain, Vector DB 객체들을 매번 생성해�
 ---
 
 ## 7. 시연 영상
-[![시연영상](https://youtu.be/cRpDm9iIDCM)](https://youtu.be/cRpDm9iIDCM)
+[![시연영상](https://img.youtube.com/vi/cRpDm9iIDCM/0.jpg)](https://youtu.be/cRpDm9iIDCM)
 ---
 
 ## 8. 추후 발전 계획
