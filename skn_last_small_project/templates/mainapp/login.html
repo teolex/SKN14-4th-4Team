@@ -1,0 +1,83 @@
+{% extends '../layout/base_content_only.html' %}
+
+{% block title %}💪 Gym-PT | Login{% endblock title %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #e0f2ff;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-card {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background-color: #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #dfe9f3;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #555;
+        }
+
+        .form-control {
+            font-size: 14px;
+        }
+
+        .btn-login {
+            background-color: #6c63ff;
+            color: white;
+        }
+
+        .btn-login:hover {
+            color: white;
+            background-color: #5852d6;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+      <div class="circle-card">
+          <div class="avatar">
+              <i class="bi bi-person-fill"></i> <!-- Bootstrap icon optional -->
+              👤
+          </div>
+          <h4 class="mb-3">LOGIN</h4>
+          <form method="post" name="loginForm">
+              {% csrf_token %}
+              <div class="mb-2 px-3">
+                  <input type="text" class="form-control" placeholder="Username" name="username" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+              </div>
+              <div class="mb-3 px-3">
+                  <input type="password" class="form-control" placeholder="Password" name="password" value="{% if form.password.value %}{{ form.password.value }}{% endif %}">
+              </div>
+              <div class="d-grid gap-2 px-3">
+                  <button type="submit" class="btn btn-login">Sign In</button>
+              </div>
+          </form>
+      </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        document.loginForm.username.focus()
+    </script>
+{% endblock script %}

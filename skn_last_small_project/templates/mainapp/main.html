@@ -1,0 +1,90 @@
+{% extends '../layout/base_default.html' %}
+
+{% load static %}
+
+{% block title %}💪 Gym-PT | Welcome!{% endblock title %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #f0f4f8;
+            color: #212529;
+        }
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .btn-custom {
+            background-color: white;
+            border: 2px solid #198754;
+            color: #198754;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #198754;
+            color: white;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="card text-center mb-4">
+            <div class="card-body">
+                <p class="h1 fw-bold">💪 Gym-PT</p>
+                <p class="h6 text-success">식단과 운동을 관리해주는 당신만의 트레이너</p>
+            </div>
+        </div>
+
+        <div class="card mb-5">
+            <div class="card-body text-center">
+                <div class="my-3">🐷 오늘 섭취한 음식의 사진들과 약간의 신체정보를 넣어주시면</div>
+                <span class="text-start">
+                    ✅ 이 음식은 몇 칼로리인지<br/>
+                    ✅ 이 칼로리를 소모하려면 어떤 운동을 얼만큼 해야하는지<br/>
+                    ✅ 남은 끼니는 어떤 음식을 섭취하면 좋을지<br/><br/>
+                </span>
+
+                <span class="text-success fw-bold">전문적으로 알려드릴게요!</span>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="h1 fw-bold">📷</p>
+                        <p class="h5 text-success">이미지 분석</p>
+                        <p class="h6">음식 사진을 올리면<br/>AI가 메뉴와 칼로리를 분석해드려요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="h1 fw-bold">🏃</p>
+                        <p class="h5 text-success">운동 추천</p>
+                        <p class="h6">섭취한 칼로리에 맞는<br/>맞춤형 운동 계획을 제공해드려요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="h1 fw-bold">🥗</p>
+                        <p class="h5 text-success">식단 관리</p>
+                        <p class="h6">남은 칼로리에 맞는<br/>건강한 식단을 추천해드려요.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 col-6 mx-auto mt-5">
+            <a href="{% url 'mainapp:chat' %}" class="btn btn-custom btn-lg rounded-pill fw-bold">
+                🍽️ 오늘의 식사 입력하기
+            </a>
+        </div>
+    </div>
+{% endblock content %}

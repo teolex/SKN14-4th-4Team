@@ -1,0 +1,171 @@
+{% extends '../layout/base_default.html' %}
+
+{% load static %}
+
+{% block title %}💪 Gym-PT | My profile{% endblock title %}
+
+{% block style %}
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .mypage-container {
+            max-width: 900px;
+            margin: 60px auto;
+        }
+
+        .card-profile {
+            border: none;
+            border-radius: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #0d6efd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h3 {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .info-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .info-item i {
+            font-size: 1.4rem;
+            color: #0d6efd;
+            width: 30px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            width: 120px;
+        }
+
+        .info-value {
+            color: #343a40;
+            font-size: 1.05rem;
+        }
+
+        .btn-group-custom .btn {
+            min-width: 140px;
+            padding: 10px 16px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-group-custom .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="card card-profile">
+        <div class="profile-header">
+            <img src="{{ picture.url }}"
+                 alt="프로필 이미지" class="profile-pic">
+            <h3>{{ name }} 님</h3>
+            <p class="text-muted">내 정보를 확인하세요 💪</p>
+        </div>
+
+        <div class="info-section">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-item">
+                        <i class="bi bi-person"></i>
+                        <div>
+                            <div class="info-label">ID</div>
+                            <div class="info-value">{{ id }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-envelope"></i>
+                        <div>
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ email }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-calendar-event"></i>
+                        <div>
+                            <div class="info-label">생일</div>
+                            <div class="info-value">{{ birthday }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="info-item">
+                        <i class="bi bi-arrows-collapse-vertical"></i>
+                        <div>
+                            <div class="info-label">신장</div>
+                            <div class="info-value">{{ height }} cm</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-weight"></i>
+                        <div>
+                            <div class="info-label">체중</div>
+                            <div class="info-value">{{ weight }} kg</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-person-badge"></i>
+                        <div>
+                            <div class="info-label">성명</div>
+                            <div class="info-value">{{ name }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 btn-group-custom">
+{#            <a href="/update-profile/" class="btn btn-outline-primary">정보 수정</a>#}
+            <a href="javascript:deregister()" class="btn btn-danger">회원 탈퇴</a>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        const deregister = () => {
+            if( confirm("정말로 탈퇴하시겠습니까?\n삭제된 계정은 다시 복구할 수 없습니다.") ) {
+                location.href = "{% url "mainapp:deregister" %}";
+            }
+        }
+    </script>
+{% endblock script %}

@@ -1,0 +1,55 @@
+{% extends '../layout/base_default.html' %}
+
+{% load static %}
+
+{% block title %}💪 Gym-PT | Sign up{% endblock title %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        .card {
+            border-radius: 12px;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4">💪 Gym-PT 등록</h2>
+
+                        <form method="post" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {{ field.errors|striptags }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+
+                            <button type="submit" class="btn btn-primary w-100 mt-3">가입하기</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

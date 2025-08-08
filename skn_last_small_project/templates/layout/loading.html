@@ -1,0 +1,83 @@
+<style>
+    #loading span {
+        position: absolute;
+        display: block;
+        width: 60px;
+        height: 60px;
+        border: 3px solid aquamarine;
+        border-radius: 100%;
+    }
+
+    #loading .a,
+    #loading .b,
+    #loading .c {
+        animation-name: rotate;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+
+    #loading .a {
+        animation-duration: 1500ms;
+    }
+
+    #loading .b {
+        animation-duration: 4500ms;
+        transform-origin: 67% 67%;
+        width: 40px;
+        height: 40px;
+    }
+
+    #loading .c {
+        animation-duration: 9000ms;
+        transform-origin: 81% 81%;
+        width: 20px;
+        height: 20px;
+    }
+
+
+    @keyframes rotate {
+        0% { transform: rotateZ(0deg); }
+        100% { transform: rotateZ(360deg); }
+    }
+
+    #loadingBox {
+        position: absolute;
+        top: 123px;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display:none;
+        z-index:9;
+    }
+    #loadingBox.on {
+        display:block;
+    }
+
+    .center {
+        position: absolute;
+        margin-top: -123px;
+        background-color:rgba(0,0,0,0.7);
+        width: 100%;
+        height: inherit;
+        justify-content: center;
+        align-items: center;
+        border-radius:10px;
+        display:flex;
+    }
+</style>
+
+<div id="loadingBox">
+    <div class="center" id="loading">
+    <span class="a">
+        <span class="b">
+            <span class="c"></span>
+        </span>
+    </span>
+    </div>
+</div>
+
+<script>
+    const $loading = document.getElementById("loadingBox");
+    const startLoading = () => $loading.classList.add("on");
+    const stopLoading  = () => $loading.classList.remove("on");
+</script>
