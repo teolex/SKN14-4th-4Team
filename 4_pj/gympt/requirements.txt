@@ -1,0 +1,7 @@
+django>=5.0
+pillow
+python-dotenv
+openai
+langchain
+langchain-openai
+pinecone-client
