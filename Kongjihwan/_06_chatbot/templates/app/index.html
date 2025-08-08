@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>GYM-PT와 대화하기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #f0f4f8;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2E7D32;
+      margin-bottom: 2rem;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .button-row button {
+      background: #ccc;
+      color: #000;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 2rem;
+      background: #fff;
+    }
+
+    .chat-message {
+      margin-bottom: 1rem;
+    }
+
+    .user-message {
+      text-align: right;
+      color: #fff;
+      background-color: #2E7D32;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .assistant-message {
+      text-align: left;
+      background-color: #e0e0e0;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    textarea, input[type="file"] {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .center-button {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .center-button button {
+      background: #2E7D32;
+      color: white;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .center-button button:hover {
+      background: #27642b;
+    }
+
+    .status {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💬 GYM-PT와 대화하기</h2>
+
+    <div class="button-row">
+      <button onclick="goToMain()">← 메인으로</button>
+    </div>
+
+    <div id="chat-messages" class="chat-box">
+      <!-- 이전 대화 메시지 들어가는 영역 -->
+    </div>
+
+    <hr>
+    <h3>📝 새로운 메시지</h3>
+
+    <input type="file" id="image-upload" accept="image/png, image/jpeg" multiple onchange="handleFileUpload()">
+    <div class="status" id="image-status"></div>
+
+    <textarea id="user-text" rows="5" placeholder="예: 나이 25세, 남성, 키 175cm, 몸무게 70kg, 평소 운동량 중간, 아침에 삶은 계란 2개 먹음..."></textarea>
+
+    <div class="center-button">
+      <button onclick="analyze()">📤 분석 요청하기</button>
+    </div>
+
+    <div class="status" id="error-message"></div>
+  </div>
+
+  <script>
+    let uploadedFiles = [];
+
+    function goToMain() {
+      window.location.href = '/';  // 또는 원래의 메인 페이지 경로
+    }
+
+    function handleFileUpload() {
+      const fileInput = document.getElementById('image-upload');
+      const status = document.getElementById('image-status');
+      uploadedFiles = Array.from(fileInput.files);
+
+      if (uploadedFiles.length > 5) {
+        status.textContent = '❌ 최대 5개의 이미지만 업로드 가능합니다.';
+        uploadedFiles = uploadedFiles.slice(0, 5);
+        fileInput.value = '';
+      } else {
+        status.textContent = `✅ ${uploadedFiles.length}개의 이미지 선택됨.`;
+      }
+    }
+
+    function addMessage(role, content) {
+      const chat = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = 'chat-message';
+      div.innerHTML = `<div class="${role === 'user' ? 'user-message' : 'assistant-message'}">${content}</div>`;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function analyze() {
+      const errorBox = document.getElementById('error-message');
+      const userText = document.getElementById('user-text').value.trim();
+
+      if (!uploadedFiles.length && !userText) {
+        errorBox.textContent = "❌ 이미지나 텍스트 중 하나는 입력해주세요.";
+        return;
+      }
+      errorBox.textContent = '';
+      addMessage('user', userText);
+
+      // ✅ FormData 구성
+      const formData = new FormData();
+      formData.append('user_text', userText);
+      uploadedFiles.forEach((file, idx) => {
+        formData.append('images', file);
+      });
+
+      try {
+        const response = await fetch("{% url 'app:index' %}", {
+          method: 'POST',
+          body: formData
+        });
+
+        const contentType = response.headers.get("content-type");
+        console.log("📦 응답 상태:", response.status);
+        console.log("📦 Content-Type:", contentType);
+
+        if (response.ok && contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          addMessage('assistant', data.result);
+        } else {
+          const errorText = await response.text();
+          console.warn('⚠ HTML 또는 비정상 응답:\n', errorText);
+          addMessage('assistant', '❌ 분석에 실패했습니다.');
+        }
+      } catch (err) {
+        console.error(err);
+        addMessage('assistant', '서버 오류가 발생했습니다.');
+      }
+
+    }
+  </script>
+</body>
+</html>

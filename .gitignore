@@ -386,4 +386,6 @@ $RECYCLE.BIN/
 
 *.jpg
 *.png
-*.pdf
+*.pdf.env
+Kongjihwan/_06_chatbot/.env
+Kongjihwan/homework_250725/.env
