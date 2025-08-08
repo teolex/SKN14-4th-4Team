@@ -1,0 +1,66 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block content %}
+<div class="text-center">
+
+  {# 메인 #}
+  <h1 class="display-4 fw-bold mb-3">💪 GYM-PT</h1>
+  <p class="h5 mb-5">식단과 운동을 관리해주는 당신만의 트레이너</p>
+
+  {# 설명 #}
+  <div class="card shadow border-0 mb-5">
+    <div class="card-body">
+      <p class="lead fw-semibold mb-4">
+      🍎 오늘 섭취한 음식의 사진들과 약간의 신체정보를 넣어주시면
+      </p>
+
+      <ul class="list-unstyled fs-5">
+        <li class="mb-2">✅ 이 음식은 몇 칼로리인지</li>
+        <li class="mb-2">✅ 이 칼로리를 소모하려면 어떤 운동을 얼만큼 해야 하는지</li>
+        <li class="mb-2">✅ 남은 끼니는 어떤 음식을 섭취하면 좋을지</li>
+      </ul>
+
+      <p class="lead fw-semibold">전문적으로 알려드릴게요!</p>
+    </div>
+  </div>
+
+  {# 기능카드 3개 #}
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+          <div class="display-4">📸</div>
+          <h5 class="card-title mt-3">이미지 분석</h5>
+          <p class="card-text">음식 사진을 올리면 AI가<br>메뉴와 칼로리를 분석해드려요</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+          <div class="display-4">🏃‍♂️</div>
+          <h5 class="card-title mt-3">운동 추천</h5>
+          <p class="card-text">섭취한 칼로리에 맞는<br>맞춤형 운동 계획을 제공해드려요</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+          <div class="display-4">🥗</div>
+          <h5 class="card-title mt-3">식단 관리</h5>
+          <p class="card-text">남은 칼로리에 맞는<br>건강한 식단을 추천해드려요</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# 시작버튼 #}
+  <a class="btn btn-primary btn-lg d-inline-flex align-items-center gap-2 cta-btn px-5" href="{% url 'chat' %}">
+    <i class="bi bi-egg-fried fs-4"></i>
+    <span>오늘의 식사 입력하기</span>
+  </a>
+</div>
+{% endblock %}

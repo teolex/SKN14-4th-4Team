@@ -1,0 +1,23 @@
+{% extends "app/base.html" %}
+{% block content %}
+<section class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0 p-5" style="max-width:90rem;">
+        <h2 class="text-center mb-4">프로필 정보</h2>
+
+        <table class="table">
+          <tr><th>키</th><td>{{ profile.height }} cm</td></tr>
+          <tr><th>몸무게</th><td>{{ profile.weight }} kg</td></tr>
+          <tr><th>나이</th><td>{{ profile.age }} 세</td></tr>
+          <tr><th>성별</th><td>{{ profile.get_gender_display }}</td></tr>
+        </table>
+
+        <div class="text-center">
+          <a href="{% url 'mypage_edit' %}" class="btn btn-success px-4">정보 수정</a>
+        </div>
+      </div>
+    </div>
+  </div>  
+</section>
+{% endblock %}
